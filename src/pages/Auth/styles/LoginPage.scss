@@ -1,0 +1,343 @@
+// ── Variables ─────────────────────────────────────────────────
+$hora:         #5a5fd6;
+$hora-light:   #7b7fdf;
+$hora-dim:     rgba(90, 95, 214, 0.1);
+$hora-border:  rgba(90, 95, 214, 0.25);
+
+$bg:           #f4f5fb;
+$card:         #ffffff;
+$border:       #e2e6f0;
+
+$text:         #0f1424;
+$text-sub:     #64748b;
+$text-muted:   #94a3b8;
+
+$error:        #ef4444;
+$error-bg:     #fff5f5;
+$error-border: #fecaca;
+
+$radius:       12px;
+$radius-sm:    8px;
+
+// ── Page ──────────────────────────────────────────────────────
+.auth-page {
+  min-height: 100vh;
+  background: $bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+// ── Card ──────────────────────────────────────────────────────
+.auth-card-full {
+  display: flex;
+  width: 100%;
+  max-width: 900px;
+  min-height: 580px;
+  background: $card;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 2px 8px rgba(15, 20, 50, 0.06),
+    0 16px 48px rgba(90, 95, 214, 0.1);
+
+  @media (max-width: 700px) { flex-direction: column; }
+}
+
+// ── Left ──────────────────────────────────────────────────────
+.auth-left {
+  flex: 0 0 460px;
+  padding: 48px 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  @media (max-width: 900px) { padding: 40px 36px; }
+  @media (max-width: 700px) { flex: none; }
+}
+
+// Brand row
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 36px;
+
+  span {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: $hora;
+    letter-spacing: -0.2px;
+  }
+}
+
+// Heading
+.auth-heading {
+  margin-bottom: 28px;
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: $text;
+    letter-spacing: -0.4px;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: $text-sub;
+    line-height: 1.5;
+  }
+}
+
+// ── Error banner (API level) ──────────────────────────────────
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: $error-bg;
+  border: 1px solid $error-border;
+  color: $error;
+  border-radius: $radius-sm;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+// ── Form ──────────────────────────────────────────────────────
+form { width: 100%; }
+
+.form-group {
+  margin-bottom: 18px;
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: $text;
+    margin-bottom: 6px;
+    letter-spacing: 0.01em;
+  }
+
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] {
+    width: 100%;
+    background: #f8f9fc;
+    border: 1.5px solid $border;
+    border-radius: $radius-sm;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: $text;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+
+    &::placeholder { color: $text-muted; }
+
+    &:focus {
+      border-color: $hora;
+      background: #fff;
+      box-shadow: 0 0 0 3px $hora-dim;
+    }
+  }
+
+  // password wrapper (for eye toggle)
+  .input-wrapper {
+    position: relative;
+
+    input { padding-right: 42px; }
+  }
+
+  // ── Error state ──────────────────────────────────────────────
+  &--error {
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      border-color: $error;
+      background: $error-bg;
+
+      &:focus {
+        border-color: $error;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      }
+    }
+  }
+}
+
+// Inline field error message
+.field-error {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: $error;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 5px;
+
+  svg { flex-shrink: 0; }
+}
+
+// Eye toggle button
+.toggle-pass {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: $text-muted;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+
+  &:hover { color: $hora; }
+}
+
+// ── Form options row ──────────────────────────────────────────
+.form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: $hora;
+    cursor: pointer;
+  }
+
+  span {
+    font-size: 13px;
+    color: $text-sub;
+  }
+}
+
+.forgot-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: $hora;
+  text-decoration: none;
+  transition: color 0.15s;
+
+  &:hover { color: $hora-light; }
+}
+
+// ── Submit button ─────────────────────────────────────────────
+.sign-in-btn {
+  width: 100%;
+  background: $hora;
+  border: none;
+  color: #fff;
+  border-radius: $radius-sm;
+  padding: 13px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.18s, box-shadow 0.18s, opacity 0.18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  &:hover:not(:disabled) {
+    background: $hora-light;
+    box-shadow: 0 4px 16px rgba(90, 95, 214, 0.35);
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+// Loading spinner inside button
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ── Right panel ───────────────────────────────────────────────
+.auth-right {
+  flex: 1;
+  background: linear-gradient(145deg, #1a1d3a 0%, #2d3180 50%, #5a5fd6 100%);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 48px;
+
+  @media (max-width: 700px) { min-height: 220px; padding: 32px; }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(255,255,255,0.06) 0%, transparent 60%),
+      radial-gradient(circle at 80% 80%, rgba(90,95,214,0.3) 0%, transparent 50%);
+  }
+
+  .quote-container {
+    position: relative;
+    z-index: 1;
+
+    .quote-mark {
+      font-family: 'Syne', sans-serif;
+      font-size: 72px;
+      line-height: 0.5;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.85);
+      font-style: italic;
+      max-width: 320px;
+    }
+  }
+}
+
+// ── Loading state (full page) ─────────────────────────────────
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: 14px;
+  color: $text-muted;
+  gap: 10px;
+
+  &::before {
+    content: '';
+    width: 18px; height: 18px;
+    border: 2px solid rgba(90,95,214,0.2);
+    border-top-color: $hora;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+}

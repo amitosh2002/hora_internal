@@ -1,0 +1,269 @@
+// ── Variables ─────────────────────────────────────────────────
+$hora-primary:     #5a5fd6;
+$hora-light:       #7b7fdf;
+$hora-dim:         rgba(90, 95, 214, 0.08);
+$hora-border:      rgba(90, 95, 214, 0.2);
+
+$bg-page:          #f4f5fb;
+$bg-card:          #ffffff;
+$bg-header:        #ffffff;
+
+$text-primary:     #0f1424;
+$text-secondary:   #4a5568;
+$text-muted:       #94a3b8;
+
+$border-color:     #e2e6f0;
+$shadow-card:      0 1px 4px rgba(15, 20, 50, 0.06), 0 4px 24px rgba(90, 95, 214, 0.06);
+$shadow-hover:     0 8px 32px rgba(90, 95, 214, 0.14);
+
+$radius-card:      14px;
+$radius-btn:       8px;
+
+// ── Tool card accent colors ───────────────────────────────────
+$tool-accents: (
+  1: (#5a5fd6, #eef0ff),   // System Config     — hora purple
+  2: (#0ea5e9, #e0f5ff),   // User Cleanup      — sky blue
+  3: (#10b981, #e6faf4),   // Metrics Audit     — emerald
+  4: (#f59e0b, #fff8e6),   // Internal Services — amber
+  5: (#8b5cf6, #f3eeff),   // Notification Hub  — violet
+  6: (#ef4444, #fff0f0),   // Database Logs     — red
+);
+
+// ── Base ──────────────────────────────────────────────────────
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: $bg-page;
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  color: $text-primary;
+  -webkit-font-smoothing: antialiased;
+}
+
+// ── Dashboard container ───────────────────────────────────────
+.dashboard-container {
+  min-height: 100vh;
+  padding: 0 0 64px;
+}
+
+// ── Header ────────────────────────────────────────────────────
+header {
+  background: $bg-header;
+  border-bottom: 1px solid $border-color;
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 8px rgba(15, 20, 50, 0.06);
+
+  .logo h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: $hora-primary;
+    letter-spacing: -0.3px;
+
+    &::before {
+      content: '⬡ ';
+      font-size: 16px;
+      opacity: 0.7;
+    }
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    span {
+      font-size: 13px;
+      color: $text-secondary;
+
+      strong {
+        color: $text-primary;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// ── Logout button ─────────────────────────────────────────────
+.logout-btn {
+  background: transparent;
+  border: 1.5px solid $border-color;
+  color: $text-secondary;
+  border-radius: $radius-btn;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.18s ease;
+
+  &:hover {
+    background: #fff0f0;
+    border-color: #fca5a5;
+    color: #ef4444;
+  }
+}
+
+// ── Intro section ─────────────────────────────────────────────
+.intro {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 52px 40px 0;
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: $text-primary;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+
+    span {
+      color: $hora-primary;
+    }
+  }
+
+  p {
+    font-size: 15px;
+    color: $text-muted;
+    line-height: 1.7;
+    max-width: 640px;
+    margin-top: 12px;
+  }
+}
+
+// ── Divider between intro and grid ────────────────────────────
+.tool-grid {
+  max-width: 1200px;
+  margin: 40px auto 0;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @media (max-width: 1024px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 640px)  { grid-template-columns: 1fr; padding: 0 20px; }
+}
+
+// ── Tool cards ────────────────────────────────────────────────
+.tool-card {
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-card;
+  padding: 28px 28px 24px;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+
+  // Top accent bar
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: $radius-card $radius-card 0 0;
+    background: $hora-primary;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover {
+    box-shadow: $shadow-hover;
+    transform: translateY(-3px);
+    border-color: $hora-border;
+
+    &::before { opacity: 1; }
+  }
+
+  // Per-card accent colors using nth-child
+  @each $n, $colors in $tool-accents {
+    $accent: nth($colors, 1);
+    $soft:   nth($colors, 2);
+
+    &:nth-child(#{$n}) {
+      .tool-icon {
+        background: $soft;
+        color: $accent;
+      }
+      &::before { background: $accent; }
+      &:hover { border-color: rgba($accent, 0.25); }
+    }
+  }
+
+  // Icon circle (add a div.tool-icon in JSX if desired)
+  .tool-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+
+  p {
+    font-size: 13px;
+    color: $text-muted;
+    line-height: 1.6;
+  }
+
+  // Arrow hint on hover
+  &::after {
+    content: '→';
+    position: absolute;
+    bottom: 20px;
+    right: 24px;
+    font-size: 16px;
+    color: $hora-primary;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  &:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// ── Loading state ─────────────────────────────────────────────
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-size: 15px;
+  color: $text-muted;
+  gap: 10px;
+
+  &::before {
+    content: '';
+    width: 18px;
+    height: 18px;
+    border: 2px solid $hora-border;
+    border-top-color: $hora-primary;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
