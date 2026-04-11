@@ -68,6 +68,11 @@ export const login = async (email, password) => {
   return response.data;
 };
 
+export const resetPassword = async (email, newPassword) => {
+  const response = await api.post("/api/internal/auth/reset-password", { email, newPassword });
+  return response.data;
+};
+
 export const getMe = async () => {
   const response = await api.get("/api/internal/auth/me");
   return response.data;

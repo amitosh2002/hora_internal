@@ -92,7 +92,7 @@ function Modal({ kvp, onClose, onSave }) {
           </div>
           <div className="ff-field">
             <label>Category</label>
-            <select value={category} onChange={e => setCategory(e.target.value)} className="ff-select-input">
+            <select value={category} onChange={e => setCategory(e.target.value.toUpperCase())} className="ff-select-input">
                 {CATEGORIES.slice(1).map(c => <option key={c} value={c}>{c}</option>)}
             </select>
           </div>
@@ -110,7 +110,7 @@ function Modal({ kvp, onClose, onSave }) {
         <div className="ff-modal__footer">
           <button className="ff-btn ff-btn--ghost" onClick={onClose}>Cancel</button>
           <button className="ff-btn ff-btn--primary" disabled={!key.trim() || !value.trim()}
-            onClick={() => onSave({ key: key.trim(), value: value.trim(), category, description, isActive })}>
+           onClick={() => onSave({ key: key.trim(), value: value.trim(), category: category.toUpperCase(), description, isActive })}>
             {kvp ? "Save Changes" : "Create Pair"}
           </button>
         </div>

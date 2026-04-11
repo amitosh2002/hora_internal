@@ -7,7 +7,7 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
 } from "../../store/Constants/authConstants";
-import { login as loginService } from "../../services/api";
+import { login as loginService, resetPassword } from "../../services/api";
 import "./styles/LoginPage.scss";
 
 const LoginPage = () => {
@@ -15,6 +15,9 @@ const LoginPage = () => {
   const [password,   setPassword]   = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [showPass,   setShowPass]   = useState(false);
+
+  const [isForgotMode, setIsForgotMode] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
 
   // inline field errors
   const [errors, setErrors] = useState({ email: "", password: "" });
@@ -49,6 +52,7 @@ const LoginPage = () => {
     if (name === "password") setPassword(value);
     // clear inline error as user types
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: "" }));
+    if (successMsg) setSuccessMsg("");
   };
 
   // ── Submit ───────────────────────────────────────────────────
@@ -60,7 +64,24 @@ const LoginPage = () => {
     const passwordErr = validateField("password", password);
     if (emailErr || passwordErr) {
       setErrors({ email: emailErr, password: passwordErr });
-      return; // ← stop here, no page refresh, no API call
+      return; 
+    }
+
+    if (isForgotMode) {
+      try {
+        const response = await resetPassword(email, password);
+        if (response.success) {
+          setSuccessMsg("Password structured successfully. You can now sign in.");
+          setIsForgotMode(false);
+          setPassword("");
+        } else {
+          dispatch({ type: LOGIN_FAILURE, payload: response.message || "Failed to reset password" });
+        }
+      } catch (err) {
+        const message = err.response?.data?.message || "Internal server error";
+        dispatch({ type: LOGIN_FAILURE, payload: message });
+      }
+      return;
     }
 
     dispatch({ type: AUTH_LOADING });
@@ -91,8 +112,12 @@ const LoginPage = () => {
           </div>
 
           <div className="auth-heading">
-            <h1>Welcome back</h1>
-            <p className="subtitle">Internal access only. Please sign in to continue.</p>
+            <h1>{isForgotMode ? "Reset Password" : "Welcome back"}</h1>
+            <p className="subtitle">
+              {isForgotMode 
+                ? "Enter your email and new password to reset." 
+                : "Internal access only. Please sign in to continue."}
+            </p>
           </div>
 
           {/* API-level error banner */}
@@ -100,6 +125,13 @@ const LoginPage = () => {
             <div className="error-banner">
               <AlertCircle size={15} />
               {error}
+            </div>
+          )}
+
+          {/* Success banner */}
+          {successMsg && (
+            <div className="success-banner" style={{ background: '#ecfdf5', color: '#065f46', padding: '10px', borderRadius: '8px', marginBottom: '16px', fontSize: '0.875rem' }}>
+              {successMsg}
             </div>
           )}
 
@@ -128,7 +160,7 @@ const LoginPage = () => {
 
             {/* Password */}
             <div className={`form-group ${errors.password ? "form-group--error" : ""}`}>
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">{isForgotMode ? "New Password" : "Password"}</label>
               <div className="input-wrapper">
                 <input
                   id="password"
@@ -158,21 +190,29 @@ const LoginPage = () => {
             </div>
 
             {/* Options */}
-            <div className="form-options">
-              <label className="remember-me">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={e => setRememberMe(e.target.checked)}
-                />
-                <span>Remember for 30 days</span>
-              </label>
-              <a href="#" className="forgot-link">Forgot password?</a>
-            </div>
+            {!isForgotMode && (
+              <div className="form-options">
+                <label className="remember-me">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={e => setRememberMe(e.target.checked)}
+                  />
+                  <span>Remember for 30 days</span>
+                </label>
+                <a href="#" className="forgot-link" onClick={(e) => { e.preventDefault(); setIsForgotMode(true); dispatch({ type: LOGIN_FAILURE, payload: null }); setErrors({}); }}>Forgot password?</a>
+              </div>
+            )}
+
+            {isForgotMode && (
+              <div className="form-options" style={{ justifyContent: 'flex-end' }}>
+                <a href="#" className="forgot-link" onClick={(e) => { e.preventDefault(); setIsForgotMode(false); dispatch({ type: LOGIN_FAILURE, payload: null }); setErrors({}); }}>Back to sign in</a>
+              </div>
+            )}
 
             <button type="submit" className="sign-in-btn" disabled={loading}>
               {loading ? <span className="btn-spinner" /> : null}
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? "Please wait..." : (isForgotMode ? "Reset Password" : "Sign in")}
             </button>
 
           </form>
