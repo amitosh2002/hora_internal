@@ -2,12 +2,9 @@ import axios from "axios";
 
 // Environment Mapping
 export const REGIONS = {
-  DEV     : "http://localhost:8000",
-  M1      : "https://m1-api.hora.ms",
-  M2      : "https://m2-api.hora.ms",
-  STAGE   : "https://stage-api.hora.ms",
-  PRE_PROD: "https://pre-prod-api.hora.ms",
-  PROD    : "https://api.hora.ms"
+  DEV   : "https://hora-dev-backend.onrender.com",
+  STAGE : "https://backend-sd-c6i1.onrender.com",
+  PROD  : "https://backend-sd-c6i1.onrender.com"
 };
 
 // Initial base URL based on saved region

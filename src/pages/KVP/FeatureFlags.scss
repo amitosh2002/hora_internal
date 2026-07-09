@@ -559,7 +559,9 @@ $shadow-hover:  0 8px 28px rgba(90,95,214,.14);
   }
 
   input[type="text"],
-  input[type="email"] {
+  input[type="email"],
+  textarea,
+  select.ff-select-input {
     width: 100%;
     background: $bg-page;
     border: 1.5px solid $border;
@@ -573,6 +575,11 @@ $shadow-hover:  0 8px 28px rgba(90,95,214,.14);
 
     &::placeholder { color: $text-muted; font-family: inherit; }
     &:focus { border-color: $hora; box-shadow: 0 0 0 3px $hora-dim; }
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 80px;
   }
 
   &__hint {

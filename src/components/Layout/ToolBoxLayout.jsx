@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
-import Header from "./Header";
 
 const ToolBoxLayout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -28,7 +27,6 @@ const ToolBoxLayout = ({ children }) => {
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       
       <main className="layout-content">
-        <Header />
         <div className="scroll-area">
           <div className="content-inner">
             {children}

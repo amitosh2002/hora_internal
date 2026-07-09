@@ -109,7 +109,7 @@ function Modal({ flag, onClose, onSave }) {
           </div>
           <div className="ff-field">
             <label>Value</label>
-            <input value={value} onChange={e => setValue(e.target.value)} placeholder="enabled / disabled / custom" />
+            <textarea value={value} onChange={e => setValue(e.target.value)} placeholder="enabled / disabled / custom" />
           </div>
           <div className="ff-field">
             <label>Category</label>

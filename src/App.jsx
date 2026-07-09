@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { Provider, useSelector, useDispatch } from "react-redux";
 import store from "./store/store";
 import { getMe } from "./services/api";
-import { setUser } from "./store/authSlice";
 import LoginPage from "./pages/Auth/LoginPage";
 import ToolBoxDashboard from "./pages/Dashboard/ToolBoxDashboard";
 import HoraServiceManagement from "./pages/Services/HoraServiceManagement";
@@ -12,6 +11,7 @@ import OnboardingPage from "./pages/Auth/OnboardingPage";
 import "./styles/main.scss";
 import FeatureFlagsPanel from "./pages/KVP/keyvaluepairs";
 import KeyValuePairPage from "./pages/KVP/KeyValuePairPage";
+import ChatActionsPage from "./pages/ChatActionsPage";
 
 // Component to handle protected routes using Redux state
 const ProtectedRoute = ({ children }) => {
@@ -38,7 +38,7 @@ const AppRouter = () => {
         try {
           const data = await getMe();
           if (data.success) {
-            dispatch(setUser(data.user));
+            dispatch({ type: "SET_USER", payload: data.user });
           }
         } catch (err) {
           console.error("Failed to hydrate user:", err);
@@ -83,6 +83,14 @@ const AppRouter = () => {
           element={
             <ProtectedRoute>
               <KeyValuePairPage />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/chat-actions"
+          element={
+            <ProtectedRoute>
+              <ChatActionsPage />
             </ProtectedRoute>
           } 
         />

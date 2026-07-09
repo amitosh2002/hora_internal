@@ -81,14 +81,14 @@ function Modal({ kvp, onClose, onSave }) {
         <div className="ff-modal__body">
           <div className="ff-field">
             <label>Key</label>
-            <input ref={inputRef} value={key}
+            <input type="text" ref={inputRef} value={key}
               onChange={e => setKey(e.target.value.toUpperCase().replace(/\s/g,"_"))}
               placeholder="GLOBAL_TIMEOUT" />
             <span className="ff-field__hint">Auto-formatted to UPPER_CASE</span>
           </div>
           <div className="ff-field">
             <label>Value</label>
-            <input value={value} onChange={e => setValue(e.target.value)} placeholder="5000" />
+            <textarea value={value} onChange={e => setValue(e.target.value)} placeholder="5000" />
           </div>
           <div className="ff-field">
             <label>Category</label>
@@ -98,7 +98,7 @@ function Modal({ kvp, onClose, onSave }) {
           </div>
           <div className="ff-field">
             <label>Description</label>
-            <input value={description} onChange={e => setDescription(e.target.value)} placeholder="What is this configuration for?" />
+            <input type="text" value={description} onChange={e => setDescription(e.target.value)} placeholder="What is this configuration for?" />
           </div>
           <div className="ff-field ff-field--row">
             <label>Active</label>
@@ -247,7 +247,7 @@ export default function KeyValuePairPage() {
           ) : filtered.map((kvp, i) => (
             <div key={kvp._id} className="ff-row-wrap" style={{ animationDelay: `${i * 0.035}s` }}>
               <KVRow kvp={kvp} 
-                onEdit={isEditor ? setEditItem : null} 
+                onEdit={isEditor ? (f) => { setEditItem(f); setShowModal(true); } : null} 
                 onDelete={isRemover ? handleDelete : null}
                 onToggle={isEditor ? handleToggle : null} 
               />

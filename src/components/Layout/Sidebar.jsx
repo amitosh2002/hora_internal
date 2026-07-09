@@ -14,15 +14,27 @@ import {
   Settings,
   Sliders,
   Globe,
+  LogOut,
+  User,
   Database
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { setBaseRegion, REGIONS } from "../../services/api";
+import { LOGOUT } from "../../store/Constants/authConstants";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const [selectedRegion, setSelectedRegion] = React.useState(localStorage.getItem("hora_region") || "DEV");
+
+  const handleLogout = () => {
+    localStorage.removeItem("internal_token");
+    dispatch({ type: LOGOUT });
+    window.location.href = "/login";
+  };
 
   // Switch region logic
   const handleRegionChange = (e) => {
@@ -35,24 +47,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   
   const menuGroups = [
     {
-      title: "Favorites",
-      items: [
-        { icon: <FileText size={18} />, label: "Technical Docs" },
-        { icon: <CheckCircle size={18} />, label: "Important Rules" },
-        { icon: <Zap size={18} />, label: "Onboarding", path: "/onboarding" },
-      ]
-    },
-    {
       title: "Main Menu",
       items: [
         { icon: <Home size={18} />, label: "Dashboard", path: "/" },
         { icon: <Settings size={18} />, label: "Service Management", path: "/services" },
         { icon: <Sliders size={18} />, label: "Feature Flags", path: "/featureflag" },
         { icon: <Database size={18} />, label: "Key-Value Pairs", path: "/config" },
-        { icon: <BarChart size={18} />, label: "Campaigns" },
-        { icon: <MessageSquare size={18} />, label: "Chat" },
-        { icon: <Users size={18} />, label: "Support Center" },
-        { icon: <Archive size={18} />, label: "Archive" },
+        { icon: <MessageSquare size={18} />, label: "Chat Actions", path: "/chat-actions" },
+        { icon: <Zap size={18} />, label: "Onboarding", path: "/onboarding" },
       ]
     }
   ];
@@ -107,17 +109,24 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         ))}
       </nav>
 
-      <div className="sidebar-footer">
+      <div className="sidebar-footer" style={{ borderTop: '1px solid var(--border-color)', padding: '16px', marginTop: 'auto' }}>
         {isOpen ? (
-          <div className="extension-banner">
-             <div className="ext-icon"><Download size={18} /></div>
-             <div className="ext-content">
-               <p className="ext-title">Get extension</p>
-               <p className="ext-link">Install Now</p>
-             </div>
+          <div className="user-profile-menu" style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '100%' }}>
+            <div className="user-avatar" style={{ background: 'var(--hora-dim)', color: 'var(--hora)', padding: '8px', borderRadius: '50%' }}>
+              <User size={18} />
+            </div>
+            <div className="user-info" style={{ flex: 1, overflow: 'hidden' }}>
+              <p className="user-name" style={{ fontSize: '13px', fontWeight: 600, margin: 0, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{user?.name || "Super Admin"}</p>
+              <p className="user-role" style={{ fontSize: '11px', color: 'var(--text-muted)', margin: 0 }}>{user?.accessType || "SUPER_ADMIN"}</p>
+            </div>
+            <button className="logout-inline" onClick={handleLogout} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }} title="Log out">
+              <LogOut size={16} />
+            </button>
           </div>
         ) : (
-          <div className="mini-ext"><Download size={18} /></div>
+          <div className="user-avatar" style={{ background: 'var(--hora-dim)', color: 'var(--hora)', padding: '8px', borderRadius: '50%', margin: '0 auto', cursor: 'pointer' }} onClick={handleLogout} title="Log out">
+            <LogOut size={18} />
+          </div>
         )}
       </div>
     </aside>
